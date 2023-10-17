@@ -30,13 +30,43 @@ def main(folder: Path):
         handle_media(file, folder / 'images' / 'PNG')
     for file in file_parser.SVG_IMAGES:
         handle_media(file, folder / 'images' / 'SVG')
+    for file in file_parser.AVI_VIDEO:
+        handle_media(file, folder / 'video' / 'AVI_VIDEO')
+    for file in file_parser.MP4_VIDEO:
+        handle_media(file, folder / 'video' / 'MP4_VIDEO')
+    for file in file_parser.MOV_VIDEO:
+        handle_media(file, folder / 'video' / 'MOV_VIDEO')
+    for file in file_parser.MKV_VIDEO:
+        handle_media(file, folder / 'video' / 'MKV_VIDEO')
+    for file in file_parser.DOC_DOCUMENT:
+        handle_media(file, folder / 'document' / 'DOC_DOCUMENT')
+    for file in file_parser.DOCX_DOCUMENT:
+        handle_media(file, folder / 'document' / 'DOCX_DOCUMENT')
+    for file in file_parser.TXT_DOCUMENT:
+        handle_media(file, folder / 'document' / 'TXT_DOCUMENT')
+    for file in file_parser.PDF_DOCUMENT:
+        handle_media(file, folder / 'document' / 'PDF_DOCUMENT')
+    for file in file_parser.XLSX_DOCUMENT:
+        handle_media(file, folder / 'document' / 'XLSX_DOCUMENT')
+    for file in file_parser.PPTX_DOCUMENT:
+        handle_media(file, folder / 'document' / 'PPTX_DOCUMENT')
     for file in file_parser.MP3_AUDIO:
         handle_media(file, folder / 'audio' / 'MP3_AUDIO')
+    for file in file_parser.OGG_AUDIO:
+        handle_media(file, folder / 'audio' / 'OGG_AUDIO')
+    for file in file_parser.WAV_AUDIO:
+        handle_media(file, folder / 'audio' / 'WAV_AUDIO')
+    for file in file_parser.AMR_AUDIO:
+        handle_media(file, folder / 'audio' / 'AMR_AUDIO')
     for file in file_parser.MY_OTHER:
         handle_media(file, folder / 'MY_OTHER')
 
-    for file in file_parser.ARCHIVES:
-        handle_archive(file, folder / 'ARCHIVES')
+    for file in file_parser.ZIP_ARCHIVES:
+        handle_archive(file, folder / 'archives' / 'ZIP_ARCHIVES')
+    for file in file_parser.GZ_ARCHIVES:
+        handle_archive(file, folder / 'archives' / 'GZ_ARCHIVES')
+    for file in file_parser.TAR_ARCHIVES:
+        handle_archive(file, folder / 'archives' / 'TAR_ARCHIVES')
 
     for folder in file_parser.FOLDERS[::-1]:
         # Видаляємо пусті папки після сортування

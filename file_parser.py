@@ -5,17 +5,53 @@ JPEG_IMAGES = []
 JPG_IMAGES = []
 PNG_IMAGES = []
 SVG_IMAGES = []
+
+AVI_VIDEO = []
+MP4_VIDEO = []
+MOV_VIDEO = []
+MKV_VIDEO = []
+
+DOC_DOCUMENT = []
+DOCX_DOCUMENT = []
+TXT_DOCUMENT = []
+PDF_DOCUMENT = []
+XLSX_DOCUMENT = []
+PPTX_DOCUMENT = []
+
 MP3_AUDIO = []
+OGG_AUDIO = []
+WAV_AUDIO = []
+AMR_AUDIO = []
+
+ZIP_ARCHIVES = []
+GZ_ARCHIVES = []
+TAR_ARCHIVES = []
+
 MY_OTHER = []
-ARCHIVES = []
+
 
 REGISTER_EXTENSION = {
     'JPEG': JPEG_IMAGES,
     'JPG': JPG_IMAGES,
     'PNG': PNG_IMAGES,
     'SVG': SVG_IMAGES,
+    'AVI': AVI_VIDEO,
+    'MP4': MP4_VIDEO,
+    'MOV': MOV_VIDEO,
+    'MKV': MKV_VIDEO,
+    'DOC': DOC_DOCUMENT,
+    'DOCX': DOCX_DOCUMENT,
+    'TXT': TXT_DOCUMENT,
+    'PDF': PDF_DOCUMENT,
+    'XLSX': XLSX_DOCUMENT,
+    'PPTX': PPTX_DOCUMENT,
+    'OGG': OGG_AUDIO,
+    'WAV': WAV_AUDIO,
+    'AMR': AMR_AUDIO,
     'MP3': MP3_AUDIO,
-    'ZIP': ARCHIVES,
+    'ZIP': ZIP_ARCHIVES,
+    'GZ': GZ_ARCHIVES,
+    'TAR': TAR_ARCHIVES
 }
 
 FOLDERS = []
@@ -30,7 +66,7 @@ def scan(folder: Path):
     for item in folder.iterdir():
         # Робота з папкою
         if item.is_dir():  # перевіряємо чи обєкт папка
-            if item.name not in ('archives', 'video', 'audio', 'documents', 'images', 'MY_OTHER'):
+            if item.name not in ('archives', 'video', 'audio', 'documents', 'images', 'MY_OTHER', 'archives'):
                 FOLDERS.append(item)
                 scan(item)
             continue
@@ -55,7 +91,7 @@ if __name__ == '__main__':
     print(f'Images jpg: {JPG_IMAGES}')
     print(f'Images png: {PNG_IMAGES}')
     print(f'AUDIO mp3: {MP3_AUDIO}')
-    print(f'Archives zip: {ARCHIVES}')
+    print(f'Archives zip: {ZIP_ARCHIVES}')
 
     print(f'EXTENSIONS: {EXTENSIONS}')
     print(f'UNKNOWN: {UNKNOWN}')
