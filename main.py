@@ -1,76 +1,66 @@
 from pathlib import Path
 import shutil
 import sys
-import file_parser
+import file_parser as parser
 from normalize import normalize
 
-def handle_media(file_name: Path, target_folder: Path):
-    target_folder.mkdir(exist_ok=True, parents=True)
-    file_name.replace(target_folder / normalize(file_name.name))
 
-def handle_archive(file_name: Path, target_folder: Path):
+def handle_media(filename: Path, target_folder: Path):
     target_folder.mkdir(exist_ok=True, parents=True)
-    folder_for_file = target_folder / normalize(file_name.name.replace(file_name.suffix, ''))
+    filename.replace(target_folder / normalize(filename.name))
+
+
+def handle_other(filename: Path, target_folder: Path):
+    target_folder.mkdir(exist_ok=True, parents=True)
+    filename.replace(target_folder / normalize(filename.name))
+
+
+def handle_archive(filename: Path, target_folder: Path):
+    target_folder.mkdir(exist_ok=True, parents=True)
+    folder_for_file = target_folder / normalize(filename.name.replace(filename.suffix, ''))
     folder_for_file.mkdir(exist_ok=True, parents=True)
     try:
-        shutil.unpack_archive(str(file_name.absolute()), str(folder_for_file.absolute()))
+        shutil.unpack_archive(str(filename.resolve()), str(folder_for_file.resolve()))
     except shutil.ReadError:
         folder_for_file.rmdir()
-        return
-    file_name.unlink()
+        return None
+    filename.unlink()
+
+
+def handle_folder(folder: Path):
+    try:
+        folder.rmdir()
+    except OSError:
+        print(f'Не удалось удалить папку {folder.resolve()}')
 
 
 def main(folder: Path):
-    file_parser.scan(folder)
-    for file in file_parser.JPEG_IMAGES:
-        handle_media(file, folder / 'images' / 'JPEG')
-    for file in file_parser.JPG_IMAGES:
-        handle_media(file, folder / 'images' / 'JPG')
-    for file in file_parser.PNG_IMAGES:
-        handle_media(file, folder / 'images' / 'PNG')
-    for file in file_parser.SVG_IMAGES:
-        handle_media(file, folder / 'images' / 'SVG')
-    for file in file_parser.AVI_VIDEO:
-        handle_media(file, folder / 'video' / 'AVI_VIDEO')
-    for file in file_parser.MP4_VIDEO:
-        handle_media(file, folder / 'video' / 'MP4_VIDEO')
-    for file in file_parser.MOV_VIDEO:
-        handle_media(file, folder / 'video' / 'MOV_VIDEO')
-    for file in file_parser.MKV_VIDEO:
-        handle_media(file, folder / 'video' / 'MKV_VIDEO')
-    for file in file_parser.DOC_DOCUMENT:
-        handle_media(file, folder / 'document' / 'DOC_DOCUMENT')
-    for file in file_parser.DOCX_DOCUMENT:
-        handle_media(file, folder / 'document' / 'DOCX_DOCUMENT')
-    for file in file_parser.TXT_DOCUMENT:
-        handle_media(file, folder / 'document' / 'TXT_DOCUMENT')
-    for file in file_parser.PDF_DOCUMENT:
-        handle_media(file, folder / 'document' / 'PDF_DOCUMENT')
-    for file in file_parser.XLSX_DOCUMENT:
-        handle_media(file, folder / 'document' / 'XLSX_DOCUMENT')
-    for file in file_parser.PPTX_DOCUMENT:
-        handle_media(file, folder / 'document' / 'PPTX_DOCUMENT')
-    for file in file_parser.MP3_AUDIO:
-        handle_media(file, folder / 'audio' / 'MP3_AUDIO')
-    for file in file_parser.OGG_AUDIO:
-        handle_media(file, folder / 'audio' / 'OGG_AUDIO')
-    for file in file_parser.WAV_AUDIO:
-        handle_media(file, folder / 'audio' / 'WAV_AUDIO')
-    for file in file_parser.AMR_AUDIO:
-        handle_media(file, folder / 'audio' / 'AMR_AUDIO')
-    for file in file_parser.MY_OTHER:
-        handle_media(file, folder / 'MY_OTHER')
+    parser.scan(folder)
 
-    for file in file_parser.ZIP_ARCHIVES:
-        handle_archive(file, folder / 'archives' / 'ZIP_ARCHIVES')
-    for file in file_parser.GZ_ARCHIVES:
-        handle_archive(file, folder / 'archives' / 'GZ_ARCHIVES')
-    for file in file_parser.TAR_ARCHIVES:
-        handle_archive(file, folder / 'archives' / 'TAR_ARCHIVES')
+    for file in parser.IMAGES:
+        handle_media(file, folder / 'images')
 
-    for folder in file_parser.FOLDERS[::-1]:
-        # Видаляємо пусті папки після сортування
-        try:
-            folder.rmdir()
-        except OSError:
-            print(f'Error during remove folder {folder}')
+    for file in parser.VIDEO:
+        handle_media(file, folder / 'video')
+
+    for file in parser.AUDIO:
+        handle_media(file, folder / 'audio')
+
+    for file in parser.DOCUMENTS:
+        handle_media(file, folder / 'documents')
+
+    for file in parser.OTHER:
+        handle_other(file, folder / 'OTHER')
+
+    for file in parser.ARCHIVES:
+        handle_archive(file, folder / 'archives')
+
+    for folder in parser.FOLDERS[::-1]:
+        handle_folder(folder)
+
+
+if __name__ == '__main__':
+    if len(sys.argv) == 2:
+        folder_for_scan = Path(sys.argv[1])
+        print(f'Start in folder {folder_for_scan.resolve()}')
+        main(folder_for_scan)
